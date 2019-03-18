@@ -1,3 +1,9 @@
+# Cubic Splines
+
+A simple package for interpolating 1D data with Akima cubic splines, based on "A New Method of Interpolation and Smooth Curve Fitting Based on Local Parameters", Akima, 1970.
+
+Works for both uniformly and non-uniformly spaced data points.
+
 ## Example usage
 
 ```
