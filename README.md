@@ -4,7 +4,7 @@
 using PyPlot
 using CubicSplines
 
-xdata = range(0,stop=4pi,length=20) .+ 0.1rand(20)
+xdata = range(0,stop=4pi,length=20) .+ 0.5rand(20)
 ydata = sin.(xdata)
 plot(xdata, ydata, "o")
 
