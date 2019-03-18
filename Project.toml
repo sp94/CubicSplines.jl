@@ -1,0 +1,6 @@
+authors = ["Samuel J Palmer <samuelpalmer94@gmail.com>"]
+name = "CubicSplines"
+uuid = "d7f39e10-48fc-11e9-16c1-bd0f27749463"
+version = "0.1.0"
+
+[deps]
