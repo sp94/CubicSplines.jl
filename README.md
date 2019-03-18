@@ -13,4 +13,8 @@ spline = CubicSpline(xdata, ydata)
 xs = range(xdata[1], stop=xdata[end], length=1000)
 ys = spline[xs]
 plot(xs, ys)
+xlabel("x")
+ylabel("y")
 ```
+
+![Example sinusoid](img/example_sinusoid.png)
