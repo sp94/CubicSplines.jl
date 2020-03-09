@@ -1,7 +1,7 @@
 name = "CubicSplines"
 uuid = "9c784101-8907-5a6d-9be6-98f00873c89b"
 authors = ["Samuel J Palmer <samuelpalmer94@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
