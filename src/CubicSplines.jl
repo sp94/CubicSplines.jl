@@ -35,7 +35,7 @@ struct CubicSpline
         xs = [xa; xb; xs; xy; xz]
         ys = [ya; yb; ys; yy; yz]
         ms = zeros(eltype(ys), length(xs)-1)
-        for i in 1:length(ms)-1
+        for i in 1:length(ms)
             ms[i] = (ys[i+1]-ys[i]) ./ (xs[i+1]-xs[i])
         end
         ts = zeros(eltype(ys), length(xs))
