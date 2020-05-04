@@ -6,7 +6,7 @@ Works for both uniformly and non-uniformly spaced data points.
 
 ## Example usage
 
-```
+```julia
 using PyPlot
 using CubicSplines
 
