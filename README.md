@@ -6,10 +6,13 @@ Works for both uniformly and non-uniformly spaced data points.
 
 ## Example usage
 
+### Interpolation
+
 ```julia
 using PyPlot
 using CubicSplines
 
+# spline some sinusoidal data with randomness in the x coordinates
 xdata = range(0,stop=4pi,length=20) .+ 0.5rand(20)
 ydata = sin.(xdata)
 plot(xdata, ydata, "o")
@@ -25,71 +28,62 @@ ylabel("y")
 
 ![Example sinusoid](img/example_sinusoid.png)
 
-## Extrapolation
 
-It is possible to add an individual extrapolating polynomial on both sides of the spline. When
-constructing the spline, a smooth transition between spline and polynomial is achieved
-by enforcing equal values as well as first and second derivatives at `xdata[1]` and
-`xdata[end]` for the spline and the extrapolating polynomial. For each of the
-two spline ends, an individual polynomial can be given (or none at all, resulting
-in an error if values from that region are requested). The left-hand side
-polynomial coefficients are given as keyword argument `extrapl`, the right-hand
-side coefficients as `extrapr` (assuming a x-axis where -Inf is on the left
-and +Inf on the right).
+### Extrapolation
 
-Examples for extrapolation from runtests.jl:
-
+By default, you will receive an error if you attempt to sample outside of the `xdata` range.
 ```julia
-using PyPlot
-using CubicSplines
-using Test
-
-# Extrapolate the spline with a quadratic curve to the left and a cubic curve to the right
-spline = CubicSpline(xdata, ydata; extrapl=[0.0; 0.5], extrapr=[1.0; 0.0; 0.5])
-left_value = -1.0
-right_value = 14.0
-@test spline[left_value] ≈ 1.13020 rtol = 1e-5 # Extrapolate linearly to the left
-@test spline[right_value] ≈ 1.93991 rtol = 1e-5 # Extrapolate linearly to the left
-
-# Plot the spline
-plt.figure()
-xs = range(left_value, stop=right_value, length=2000)
-ys = spline[xs]
-plt.plot(xdata, ydata, "o")
-plt.plot(xs, ys)
-plt.xlabel("x")
-plt.ylabel("y")
-plt.title("With extrapolation on both sides")
-
-# Extrapolate the spline with a linear curve to the left
-spline = CubicSpline(xdata, ydata; extrapl=[1.0], extrapr=nothing) # Linear extrapolation with an incline of 1.0
-
-# Data from outside the interpolation range
-left_value = -1.0
-right_value = 14.0
-@test spline[left_value] ≈ -1.004278 rtol = 1e-5 # Extrapolate linearly to the left
-@test_throws String spline[right_value] # No extrapolation (throw an error)
-
-# Plot the spline
-plt.figure()
-xs = range(left_value, stop=xdata[end], length=1000)
-ys = spline[xs]
-plt.plot(xdata, ydata, "o")
-plt.plot(xs, ys)
-plt.xlabel("x")
-plt.ylabel("y")
-plt.title("With linear extrapolation to the left")
+spline = CubicSpline(xdata, ydata)
+# will throw errors:
+spline[minimum(xdata) - 0.001]
+spline[maximum(xdata) + 0.001]
 ```
 
-The extrapolation polynomials are defined by their coefficients and the first / last
-value of `xdata` respectively:
-
+If you want to extrapolate outside of the data range, you can specify the polynomials
+to use for this extrapolation (one for each end of the spline).
+The left-hand side polynomial coefficients are given as keyword argument `extrapl`, the
+right-hand side coefficients as `extrapr` (assuming a x-axis where `-Inf` is on the left
+and `+Inf` on the right). For example, if `extrapl` is given, then the left
+of the spline will be extrapolated as
 ```julia
 extrapl = [p1, p2, p3, ..., pn]
 y = p0 + p1*(x-xdata[1]) + p2*(x-xdata[1])^2 + p3*(x-xdata[1])^3 + ... + pn*(x-xdata[1])^n
 ```
 
+For example, we can extrapolate from a spline with straight lines of a
+specified slope as follows:
+
+```julia
+using PyPlot
+using CubicSplines
+
+# spline some sinusoidal data
+xdata = range(0,stop=2π,length=20)
+ydata = sin.(xdata)
+plot(xdata, ydata, "ko")
+
+# x values outside of the xdata range
+xs = range(-1, stop=2π+1, length=1000)
+
+# extrapolate with linear polynomials of slope=1 or slope=2
+for slope in [1,2]
+	spline = CubicSpline(xdata, ydata, extrapl=[slope,], extrapr=[slope,])
+	plot(xs, spline[xs], label="Slope = $(slope)")
+end
+
+xlabel("x")
+ylabel("y")
+legend()
+```
+
+![Example extrapolation](img/example_extrapolation.png)
+
+Note that the first and second derivatives of the spline will be matched to the
+extrapolating polynomials. Changing the extrapolating polynomials can therefore result
+in small changes at the edges of the interpolated region, as we see in the image above.
+
+
 ## Gradient calculation
 
-The gradient of grade n at value x can be requested by `gradient(spline, x, n)`.
-This also works for the extrapolation polynomials
+The gradient of grade `n` at value `x` can be requested by `gradient(spline, x, n)`.
+This also works for the extrapolation regions.
