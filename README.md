@@ -39,6 +39,7 @@ spline[minimum(xdata) - 0.001]
 spline[maximum(xdata) + 0.001]
 ```
 
+
 If you want to extrapolate outside of the data range, you can specify the polynomials
 to use for this extrapolation (one for each end of the spline).
 The left-hand side polynomial coefficients are given as keyword argument `extrapl`, the
@@ -82,6 +83,10 @@ Note that the first and second derivatives of the spline will be matched to the
 extrapolating polynomials. Changing the extrapolating polynomials can therefore result
 in small changes at the edges of the interpolated region, as we see in the image above.
 
+It is also possible to allow extrapolate on one side of the spline without allowing
+extrapolation on the other side of the spline. For example, if we provided a value of
+`extrapl` and left `extrapr` as the default value `nothing` then we could extrapolate
+to the left of the spline and throw an out of bounds error to the right of the spline.
 
 ## Gradient calculation
 
