@@ -1,7 +1,6 @@
 using Test
 using CubicSplines
 using Random
-using PyPlot # Plot the curve
 
 @testset "cubic_splines.jl" begin
 
