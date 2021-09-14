@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/sp94/CubicSplines.jl/branch/master/graph/badge.svg?token=SGDQ7C7S4Z)](https://codecov.io/gh/sp94/CubicSplines.jl)
+
 # Cubic Splines
 
 A simple package for interpolating 1D data with Akima cubic splines, based on "A New Method of Interpolation and Smooth Curve Fitting Based on Local Parameters", Akima, 1970.
@@ -28,10 +30,10 @@ ylabel("y")
 
 ![Example sinusoid](img/example_sinusoid.png)
 
-
 ### Extrapolation
 
 By default, you will receive an error if you attempt to sample outside of the `xdata` range.
+
 ```julia
 spline = CubicSpline(xdata, ydata)
 # will throw errors:
@@ -39,13 +41,13 @@ spline[minimum(xdata) - 0.001]
 spline[maximum(xdata) + 0.001]
 ```
 
-
 If you want to extrapolate outside of the data range, you can specify the polynomials
 to use for this extrapolation (one for each end of the spline).
 The left-hand side polynomial coefficients are given as keyword argument `extrapl`, the
 right-hand side coefficients as `extrapr` (assuming a x-axis where `-Inf` is on the left
 and `+Inf` on the right). For example, if `extrapl` is given, then the left
 of the spline will be extrapolated as
+
 ```julia
 extrapl = [p1, p2, p3, ..., pn]
 y = p0 + p1*(x-xdata[1]) + p2*(x-xdata[1])^2 + p3*(x-xdata[1])^3 + ... + pn*(x-xdata[1])^n
