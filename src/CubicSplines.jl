@@ -213,6 +213,7 @@ function gradient(spline::CubicSpline, x::Real, n::Integer)
     # Value sits on upper interval border
     if x == spline.xs[end]
         idx = length(spline.xs)-1
+        coeff = []
 
     # Find the corresponding interval
     else
