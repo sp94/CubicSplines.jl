@@ -219,29 +219,29 @@ function gradient(spline::CubicSpline, x::Real, n::Integer)
 
         # Find the interval index
         idx = _binary_search_interval(spline.xs, x)
+    end
 
-        # Extrapolation to the "left"
-        if idx == 0
-            if spline.extrapl === nothing
-                throw("x too small ($x < $(spline.xs[1]))")
-            else
-                coeff = spline.extrapl
-                x_ref = spline.xs[1]
-            end
-
-        # Extrapolation to the "right"
-        elseif idx == length(spline.xs)
-            if spline.extrapr === nothing
-                throw("x too big ($x > $(spline.xs[end]))")
-            else
-                coeff = spline.extrapr
-                x_ref = spline.xs[end]
-            end
+    # Extrapolation to the "left"
+    if idx == 0
+        if spline.extrapl === nothing
+            throw("x too small ($x < $(spline.xs[1]))")
         else
-            coeff = spline.ps[idx,:]
-            x_ref = spline.xs[idx]
-
+            coeff = spline.extrapl
+            x_ref = spline.xs[1]
         end
+
+    # Extrapolation to the "right"
+    elseif idx == length(spline.xs)
+        if spline.extrapr === nothing
+            throw("x too big ($x > $(spline.xs[end]))")
+        else
+            coeff = spline.extrapr
+            x_ref = spline.xs[end]
+        end
+    else
+        coeff = spline.ps[idx,:]
+        x_ref = spline.xs[idx]
+
     end
 
     # Calculate the coefficients of degree n
